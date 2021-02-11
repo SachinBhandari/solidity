@@ -221,6 +221,19 @@ string TestFunctionCall::format(
 				stream << comment << m_call.expectations.comment << comment;
 			}
 		}
+
+		if (m_behaviours != nullptr)
+			for (auto& behaviour: *m_behaviours)
+			{
+				if (_renderResult == false && _highlight == true)
+					behaviour->printExpectedResult(*this, _linePrefix, stream);
+				else if (_renderResult == true && _highlight == true)
+					behaviour->printObtainedResult(*this, _linePrefix, stream);
+				else if (_renderResult == true && _highlight == false)
+					behaviour->printToFile(*this, stream);
+				else
+					soltestAssert(false, "");
+			}
 	};
 
 	formatOutput(m_call.displayMode == FunctionCall::DisplayMode::SingleLine);

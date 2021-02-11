@@ -39,6 +39,11 @@
 
 #include <boost/test/unit_test.hpp>
 
+namespace solidity::frontend::test
+{
+struct LogRecord;
+} // namespace solidity::frontend::test
+
 namespace solidity::test
 {
 using rational = boost::rational<bigint>;
@@ -51,6 +56,8 @@ class ExecutionFramework
 {
 
 public:
+	std::vector<solidity::frontend::test::LogRecord> recordedLogs() const;
+
 	ExecutionFramework();
 	ExecutionFramework(langutil::EVMVersion _evmVersion, std::vector<boost::filesystem::path> const& _vmPaths);
 	virtual ~ExecutionFramework() = default;
@@ -240,6 +247,21 @@ public:
 		return result;
 	}
 
+	/// @returns the (potentially newly created) _ith address.
+	util::h160 account(size_t _i);
+
+	u256 balanceAt(util::h160 const& _addr);
+	bool storageEmpty(util::h160 const& _addr);
+	bool addressHasCode(util::h160 const& _addr);
+
+	size_t numLogs() const;
+	size_t numLogTopics(size_t _logIdx) const;
+	util::h256 logTopic(size_t _logIdx, size_t _topicIdx) const;
+	util::h160 logAddress(size_t _logIdx) const;
+	bytes logData(size_t _logIdx) const;
+
+
+
 private:
 	template <class CppFunction, class... Args>
 	auto callCppAndEncodeResult(CppFunction const& _cppFunction, Args const&... _arguments)
@@ -263,19 +285,6 @@ protected:
 	void sendEther(util::h160 const& _to, u256 const& _value);
 	size_t currentTimestamp();
 	size_t blockTimestamp(u256 _number);
-
-	/// @returns the (potentially newly created) _ith address.
-	util::h160 account(size_t _i);
-
-	u256 balanceAt(util::h160 const& _addr);
-	bool storageEmpty(util::h160 const& _addr);
-	bool addressHasCode(util::h160 const& _addr);
-
-	size_t numLogs() const;
-	size_t numLogTopics(size_t _logIdx) const;
-	util::h256 logTopic(size_t _logIdx, size_t _topicIdx) const;
-	util::h160 logAddress(size_t _logIdx) const;
-	bytes logData(size_t _logIdx) const;
 
 	langutil::EVMVersion m_evmVersion;
 	solidity::frontend::RevertStrings m_revertStrings = solidity::frontend::RevertStrings::Default;

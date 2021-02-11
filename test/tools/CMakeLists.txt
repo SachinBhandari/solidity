@@ -39,5 +39,10 @@ add_executable(isoltest
 	../libyul/YulOptimizerTest.cpp
 	../libyul/YulOptimizerTestCommon.cpp
 	../libyul/YulInterpreterTest.cpp
+	../libsolidity/Builtin.h
+	../libsolidity/Behaviour.h
+	../libsolidity/behaviour/SmokeBehaviour.h
+	../libsolidity/behaviour/LogsBehaviour.h
+	../libsolidity/behaviour/LogsBehaviour.cpp
 )
 target_link_libraries(isoltest PRIVATE evmc libsolc solidity yulInterpreter evmasm Boost::boost Boost::program_options Boost::unit_test_framework)
